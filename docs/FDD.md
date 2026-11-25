@@ -73,7 +73,7 @@ A seção 15 concentra tudo o que a reunião deixou em aberto e precisa ser conf
 
 | ID | Item |
 |---|---|
-| FDD-ESC-01 | Registro do evento na `webhook_outbox` dentro da transação de `OrderService.changeStatus`, pela função `publishWebhookEvent(tx, order, fromStatus, toStatus)` (`[09:41] Bruno`). O registro inclui o filtro por status na inserção (ADR-008) e o payload em snapshot (ADR-007). A criação do pedido não emite evento (proposta, ver FDD-PROP-09). |
+| FDD-ESC-01 | Registro do evento na `webhook_outbox` dentro da transação de `OrderService.changeStatus`, pela função `publishWebhookEvent(tx, order, fromStatus, toStatus)` (`[09:40] Bruno`, `[09:41] Bruno`). O registro inclui o filtro por status na inserção (ADR-008) e o payload em snapshot (ADR-007). A criação do pedido não emite evento (proposta, ver FDD-PROP-09). |
 | FDD-ESC-02 | Worker em processo separado (`[09:10] Larissa`, `[09:11] Diego`, `[09:13] Larissa`): entry-point `src/worker.ts` (novo), script `npm run worker` (novo), polling de 2 segundos e worker único. |
 | FDD-ESC-03 | Novas tentativas nos intervalos 1m/5m/30m/2h/12h, com teto de 5 tentativas (`[09:17] Larissa`), lido como 1 envio inicial mais 5 novas tentativas (proposta, ver FDD-PROP-11), e timeout de 10 segundos. Fila de mortos em `webhook_dead_letter` (`[09:17] Larissa`, `[09:18] Diego`, `[09:42] Diego`). |
 | FDD-ESC-04 | Assinatura das entregas com HMAC-SHA256 sobre o corpo, usando secret única por endpoint de webhook, gerada pela plataforma e devolvida na criação (`[09:22] Sofia`, `[09:31] Marcos`). A entrega leva os headers FDD-HEADER-01 a FDD-HEADER-05 (`[09:44] Diego`, `[09:45] Diego`). O payload tem limite de 64KB, com erro se ultrapassar (`[09:24] Larissa`). |
@@ -101,7 +101,7 @@ A solução roda em dois processos Node: a API, iniciada por `src/server.ts`, e 
 
 | ID | Componente | Processo | Responsabilidade | Onde |
 |---|---|---|---|---|
-| FDD-COMP-01 | Módulo de webhooks | API | Expõe FDD-CONTRATO-01 a FDD-CONTRATO-07 com `authenticate` e `validate`, e com `requireRole` no replay. Gera a secret na criação e na rotação (geração: proposta, ver FDD-PROP-19). É registrado em `buildControllers` (`src/app.ts`) e em `buildApiRouter` (`src/routes/index.ts`). | `src/modules/webhooks/webhook.controller.ts` (novo), `src/modules/webhooks/webhook.service.ts` (novo), `src/modules/webhooks/webhook.repository.ts` (novo), `src/modules/webhooks/webhook.routes.ts` (novo), `src/modules/webhooks/webhook.schemas.ts` (novo) |
+| FDD-COMP-01 | Módulo de webhooks | API | Expõe FDD-CONTRATO-01 a FDD-CONTRATO-07 com `authenticate` e `validate`, e com `requireRole` no replay. Gera a secret na criação e na rotação (gerá-la é decisão da reunião, `[09:31] Marcos`; o formato e a entropia são proposta, ver FDD-PROP-19). É registrado em `buildControllers` (`src/app.ts`) e em `buildApiRouter` (`src/routes/index.ts`). | `src/modules/webhooks/webhook.controller.ts` (novo), `src/modules/webhooks/webhook.service.ts` (novo), `src/modules/webhooks/webhook.repository.ts` (novo), `src/modules/webhooks/webhook.routes.ts` (novo), `src/modules/webhooks/webhook.schemas.ts` (novo) |
 | FDD-COMP-02 | Ponto de publicação | API, dentro da transação | Chama `publishWebhookEvent(tx, order, fromStatus, toStatus)` no mesmo callback de `this.prisma.$transaction` que executa `tx.order.update` e `tx.orderStatusHistory.create`. A função aplica o filtro por status (ADR-008) e insere o payload renderizado (ADR-007). | Chamada em `src/modules/orders/order.service.ts`; a função é do módulo `src/modules/webhooks/` (novo) |
 | FDD-COMP-03 | Entry-point do worker | Worker | Implementa `bootstrap` e `shutdown` (`SIGINT`/`SIGTERM`, com `prisma.$disconnect()`) no modelo de `src/server.ts`. Usa instância própria de `PrismaClient`, vinda de `src/config/database.ts`. É iniciado por `npm run worker` (novo). | `src/worker.ts` (novo), `package.json` |
 | FDD-COMP-04 | Processador de entregas | Worker | A cada 2 segundos, lê as linhas pendentes mais antigas, em lote pequeno (proposta, ver FDD-PROP-04). Assina e envia cada uma com timeout de 10 segundos, registra o resultado e decide entre entregue, nova tentativa ou DLQ. | `src/modules/webhooks/webhook.processor.ts` (novo); nome proposto, ver FDD-PROP-14 |
@@ -605,7 +605,7 @@ Os caminhos completos levam o prefixo `/api/v1`, com que a API é montada em `sr
 ```
 
 - **Sucesso:** `200`, como em `CustomerController.list`.
-  - A resposta traz até 100 itens em `data`, do mais recente para o mais antigo.
+  - A resposta traz até 100 itens em `data`, do mais recente para o mais antigo (a ordem é proposta, ver FDD-PROP-26).
   - O `payload` é o corpo do evento enviado, com campos em snake_case (seção 7.2).
 
 ```json
@@ -698,7 +698,7 @@ Os caminhos completos levam o prefixo `/api/v1`, com que a API é montada em `sr
   - Registra em log, para auditoria, quem fez o replay (`[09:36] Sofia`). O registro contém o `req.user.id` preenchido por `authenticate`, o `id` do item e o id do evento.
   - Dois pontos não foram discutidos (lacuna FDD-GAP-32): se o item continua na fila de mortos após o replay, e o replay de item cujo cadastro foi removido ou está inativo.
 
-A consulta por id (`GET /api/v1/webhooks/:id`) não foi pedida na reunião (`[09:33] Bruno`) e não faz parte destes contratos (ver FDD-PROP-13).
+A consulta por id (`GET /api/v1/webhooks/:id`) não consta das rotas que Bruno enumerou na reunião (`[09:33] Bruno`): não foi pedida e não faz parte destes contratos (ver FDD-PROP-13).
 
 
 ### 7.2 Entrega do evento — FDD-CONTRATO-08
@@ -960,7 +960,7 @@ Cada subseção trata de um arquivo existente e descreve três pontos: o que ele
 
 **O que muda.**
 
-1. Entra a chamada `await publishWebhookEvent(tx, order, from, to)` depois de `tx.orderStatusHistory.create` e antes da releitura (`refreshed`), no mesmo callback da transação (`[09:40] Bruno`, `[09:41] Bruno`, `[09:41] Diego`).
+1. Entra a chamada `await publishWebhookEvent(tx, order, from, to)` depois de `tx.orderStatusHistory.create` e antes da releitura (`refreshed`), no mesmo callback da transação (`[09:40] Bruno`, `[09:41] Bruno`, `[09:41] Diego`). A reunião fixou apenas que a inserção acontece dentro da mesma transação; a posição dela dentro do callback é escolha deste documento, por ser indiferente à atomicidade.
 2. A função recebe:
    - `tx`: o cliente da transação corrente;
    - `order`: o objeto carregado no início do método, já garantido não nulo pelo `NotFoundError`;
@@ -1165,7 +1165,7 @@ O worker não importa `buildApp` nem abre porta HTTP, e `src/server.ts` não imp
 **Na feature.** O arquivo não muda.
 
 - `src/worker.ts` (novo) importa `prisma` deste arquivo. No processo do worker, o carregamento executa `createPrismaClient()` e gera uma instância própria, distinta da instância da API, no mesmo banco e com a mesma `DATABASE_URL` (`[09:30] Bruno`).
-- Uma segunda chamada explícita a `createPrismaClient()` criaria outra instância no mesmo processo, porque o import já cria o singleton.
+- Como o import já cria uma instância, uma chamada explícita a `createPrismaClient()` no worker criaria uma segunda instância no mesmo processo.
 - O processador recebe o `PrismaClient` por parâmetro, como os repositories existentes.
 
 ### 12.11 `src/config/env.ts` — sem mudança (FDD-INT-11)

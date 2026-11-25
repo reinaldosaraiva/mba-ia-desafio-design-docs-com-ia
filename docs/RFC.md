@@ -60,7 +60,7 @@ Elementos da solução:
 | RFC-DEC-05 | Entrega at-least-once, com identificador único por evento, atribuído na entrada na outbox, para deduplicação no cliente. O comportamento é documentado no portal do desenvolvedor. | `[09:25] Diego` (UUID gerado na entrada na outbox); `[09:26] Larissa` (decisão); `[09:26] Marcos` (portal do desenvolvedor) | [ADR-005](adrs/ADR-005-at-least-once-com-x-event-id.md) |
 | RFC-DEC-06 | Módulo igual aos demais, reusando os padrões existentes: erros, logger Pino, middleware de erro centralizado, schemas Zod, códigos de erro e controle de role. O worker usa uma instância própria do cliente Prisma no mesmo banco. | `[09:30] Larissa`; `[09:30] Bruno` (instância própria de `PrismaClient`); `[09:36] Larissa` (reuso do `requireRole`) | [ADR-006](adrs/ADR-006-reuso-dos-padroes-do-projeto.md) |
 | RFC-DEC-07 | Payload renderizado na inserção (snapshot), refletindo o pedido no instante da mudança de status. | `[09:52] Larissa` (preferência); `[09:52] Bruno` (fechamento) | [ADR-007](adrs/ADR-007-snapshot-do-payload-na-insercao.md) |
-| RFC-DEC-08 | Cada cadastro guarda os status que quer ouvir, e o filtro é aplicado na inserção. Se nenhum webhook do cliente assina o status de destino, nada é gravado. *Interpretação a confirmar:* RFC-QA-08. | `[09:34] Bruno` | [ADR-008](adrs/ADR-008-filtro-de-eventos-na-insercao.md) |
+| RFC-DEC-08 | Cada cadastro guarda os status que quer ouvir, e o filtro é aplicado na inserção. Se nenhum webhook do cliente assina o status de destino, nada é gravado. *Interpretação a confirmar:* RFC-QA-08. | `[09:33] Marcos` (lista de status por cadastro); `[09:34] Bruno` (filtro aplicado na inserção) | [ADR-008](adrs/ADR-008-filtro-de-eventos-na-insercao.md) |
 
 ## 5. Alternativas consideradas
 
@@ -98,7 +98,7 @@ Todas foram discutidas e descartadas na reunião.
 
 ### 6.3 Lacunas identificadas ao escrever este documento
 
-Pontos **não** discutidos na reunião; seguem para a seção de lacunas do [FDD](FDD.md):
+Pontos **não** discutidos na reunião. Os trechos citados em cada item são vizinhos do assunto, não uma decisão sobre ele. Seguem para a seção de lacunas do [FDD](FDD.md):
 
 - **RFC-GAP-01** — Destino de evento pendente quando o cadastro é removido ou desativado (`[09:21] Bruno`, `[09:33] Bruno`).
 - **RFC-GAP-02** — Qual resposta do cliente conta como sucesso; só o timeout de 10 segundos, como falha, foi definido (`[09:42] Diego`).
