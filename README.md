@@ -12,9 +12,10 @@ A regra central do desafio é a que mais moldou o processo: **toda informação 
 
 | Camada | Ferramenta | Papel |
 |---|---|---|
-| Geração | `ask etipi` — Claude Opus 5.5, raciocínio `xhigh`, pelo proxy etipi (harness `ask`, chamada única, sem ferramentas, somente leitura) | Toda a redação: inventário da transcrição, mapa do código, ADRs, RFC, FDD, PRD. Também fez a auditoria adversarial, em contexto novo, sobre os documentos já escritos |
-| Coordenação | Agente `pi` (modelo `glm-5.4`, provedor zai) | Escreveu os prompts, montou o material de origem de cada chamada, leu cada saída contra a transcrição e o código, aplicou correções, consolidou lacunas e montou o pacote |
+| Geração | Claude Opus 5.5, raciocínio `xhigh`, acionado por um harness interno de chamada única (`ask`), sem ferramentas e somente leitura | Toda a redação: inventário da transcrição, mapa do código, ADRs, RFC, FDD, PRD. Também fez a auditoria adversarial, em contexto novo, sobre os documentos já escritos |
+| Coordenação | Agente `pi` (modelo `glm-5.4`, da Zhipu AI) | Escreveu os prompts, montou o material de origem de cada chamada, leu cada saída contra a transcrição e o código, aplicou correções, consolidou lacunas e montou o pacote |
 | Revisão de segurança | Subagente `pi` isolado (modelo `glm-5.4`, somente leitura, sem acesso ao processo de redação) | Revisão adversarial do desenho em contexto novo: segurança, contradições entre documentos e itens descartados que não deveriam aparecer |
+| Deliberação | Council consultivo de modelos de famílias diferentes: GLM-5.4 (Zhipu AI) e Qwen3.6-27B (Alibaba) como membros; Llama-3.3-70B (Meta) como chairman | Deliberou, em três estágios (resposta independente, avaliação por pares às cegas, síntese), sobre o bloqueio apontado pela revisão de segurança e as condições de publicação |
 | Verificação | Script Python próprio, sem LLM (não faz parte da entrega, por ser documental) | Conferiu mecanicamente caminhos de arquivo, timestamps e falantes, IDs, cobertura do tracker, seções e contagens dos critérios de aceite; tem controles negativos |
 
 O gerador não teve acesso livre ao repositório: só recebe o que o coordenador coloca no prompt. Cada chamada de redação leva a transcrição integral e os arquivos de código relevantes, e devolve só texto.
@@ -30,7 +31,7 @@ A ordem seguiu a sugerida no enunciado, com duas etapas antes e duas depois:
 5. **FDD.** Nove chamadas, uma por bloco de seções, com um bloco de convenções compartilhadas para as partes não divergirem: nomes de arquivos e tabelas, IDs fixos dos contratos e um **registro de lacunas** com numeração fixa.
 6. **PRD.** Duas chamadas, sobre a transcrição e o resumo dos ADRs.
 7. **Tracker.** Cada documento sai da chamada com uma tabela "fontes por ID", escrita no momento da redação. O tracker é a junção dessas tabelas.
-8. **Revisão em três camadas:** leitura do coordenador contra as fontes; auditoria adversarial pelo gerador em contexto novo (11 chamadas: 8 de fidelidade à transcrição, 2 só de afirmações sobre código e 1 sobre o RFC final); revisão de segurança do desenho por um subagente isolado, com acesso somente leitura; validador determinístico.
+8. **Revisão em três camadas:** leitura do coordenador contra as fontes; auditoria adversarial pelo gerador em contexto novo (11 chamadas: 8 de fidelidade à transcrição, 2 só de afirmações sobre código e 1 sobre o RFC final); revisão de segurança do desenho por um subagente isolado, com acesso somente leitura; deliberação por council multiprovider sobre o bloqueio encontrado; validador determinístico.
 9. **README** por último.
 
 Como a interação com a IA foi organizada:
@@ -148,7 +149,7 @@ Não reporte estilo. Só erros de fidelidade à fonte.
 
 ## Iterações e ajustes
 
-Foram **4 ciclos principais** de geração, revisão e ajuste, além da preparação. Os momentos em que a IA errou ou ficou superficial e a correção aplicada:
+Foram **5 ciclos principais** de geração, revisão e ajuste, além da preparação. Os momentos em que a IA errou ou ficou superficial e a correção aplicada:
 
 **Ajuste 1 — inventário truncado em silêncio.** A primeira versão do inventário, numa chamada única, parou no meio do JSON. O gerador não devolve erro: o limite de saída cobre o raciocínio, e em `xhigh` o raciocínio consome a maior parte. Correção: quatro janelas de tempo, uma detecção de corte por marcador e, a partir daí, toda tarefa particionada. A mesma causa cortou uma parte do FDD, que foi refeita em duas chamadas, e a primeira tentativa de encurtar o RFC.
 
@@ -164,9 +165,11 @@ Foram **4 ciclos principais** de geração, revisão e ajuste, além da prepara�
 
 **Ajuste 7 — RFC longo demais.** A primeira versão tinha 2.803 palavras, acima do alvo de 2 a 4 páginas. As seções de alternativas, questões em aberto e impacto foram refeitas em formato de tabela, com a restrição de manter exatamente os mesmos IDs e citações. O resultado tem cerca de 2.500 palavras. Um script comparou IDs e citações antes e depois: nada se perdeu.
 
-**Ajuste 8 — o harness censurava a resposta.** A camada de saneamento do `ask` troca por `[REDACTED]` qualquer valor que segue uma chave como `secret` ou `token`. Exemplos de contrato perdiam o campo. Correção: a IA passou a usar um placeholder explícito e cada saída foi revista quanto a marcadores de censura.
+**Ajuste 8 — o harness censurava a resposta.** A camada de saneamento do harness troca por `[REDACTED]` qualquer valor que segue uma chave como `secret` ou `token`. Exemplos de contrato perdiam o campo. Correção: a IA passou a usar um placeholder explícito e cada saída foi revista quanto a marcadores de censura.
 
 **Ajuste 9 — a revisão de segurança isolada mudou a severidade de um risco.** O risco de "qualquer usuário autenticado cadastrar um webhook para qualquer cliente" estava registrado como probabilidade média, herdando a leitura da reunião. O revisor isolado mostrou o encadeamento que faltava: no código o registro de usuário é público e não há vínculo entre usuário e cliente, então "usuário autenticado" significa qualquer pessoa. O risco passou a alto e bloqueante de produção, com uma proposta que reabre a decisão da reunião — e por isso está marcada como proposta, não como requisito. Entraram também a leitura de serviços internos pela resposta guardada no histórico, a amplificação do trabalho do worker pelo número de cadastros e o uso da secret antiga por 24 horas após a rotação. Um achado do revisor foi aceito com ressalva: inverter a proposta de rotação é razoável, mas o ganho de segurança alegado é menor do que o revisor afirma, porque a janela de falsificação depende de o cliente aceitar a secret antiga, e não de qual secret a plataforma usa para assinar. As duas leituras estão registradas com esse trade-off.
+
+**Ajuste 10 — o bloqueio foi para o council, não para a decisão isolada do coordenador.** A revisão de segurança isolada deixou um veredito "bloqueado". Em vez de o coordenador decidir sozinho, o caso foi a um council: dois modelos de provedores diferentes do gerador responderam à mesma consulta, avaliaram às cegas a resposta um do outro, e um terceiro modelo sintetizou. O council foi unânime em três pontos: o bloqueio é do deploy, não da entrega documental; o tratamento dado respeita a fidelidade à reunião; e a publicação pode seguir com ajustes. Os ajustes pedidos e aplicados: separar no texto do risco o que é pré-existente do que a feature acrescenta; dizer que "bloqueante" significa bloqueio de deploy, ancorado na revisão de segurança que o próprio time agendou ([09:46] Sofia); e anotar no requisito derivado de [09:37] que a premissa de [09:32] não vale no código. A recomendação de engenharia do council, a levar à revisão de segurança: corrigir primeiro o registro público que aceita `role`, porque sem isso restringir a ADMIN não tem efeito; restringir o gerenciamento de webhooks a ADMIN como contenção; e, no médio prazo, vincular usuário a cliente e checar propriedade. Um pedido do council foi rebatido: criar um ADR para o conflito. O enunciado reserva os ADRs — no máximo oito — a decisões fechadas na reunião, e o conflito já está registrado como questão em aberto no RFC e como lacuna e proposta no FDD. Os membros também apontaram um erro "do coordenador" que era da consulta: a minha exposição omitira [09:21], que pede o endpoint de rotação de secret; corrigi a consulta antes da síntese. O gerador não participou do council: a rota dele recusou a consulta em um segundo, provavelmente por filtro de moderação do provedor sobre o conteúdo. Não havia como contornar, e ele era o interessado.
 
 ## Como navegar a entrega
 
@@ -198,7 +201,7 @@ Ao ler, três marcações importam: `(novo)` depois de um caminho indica arquivo
 
 O que foi verificado de forma mecânica no repositório final:
 
-- 1319 citações `[hh:mm] Falante` no corpo dos documentos: todas existem, com aquele falante naquele minuto.
+- 1328 citações `[hh:mm] Falante` no corpo dos documentos: todas existem, com aquele falante naquele minuto.
 - 272 menções a caminhos de código existentes: todos os caminhos existem; os que ainda não existem estão marcados `(novo)`.
 - 554 IDs definidos nos documentos. 449 têm origem direta e estão na tabela principal do tracker (87,3% transcrição, 57 código); os outros 105 são propostas sem origem direta e estão no apêndice, identificadas como tais. Pela leitura estrita do critério do enunciado, a cobertura da tabela principal é de 81,0%.
 - Nenhum valor numérico fora do que foi decidido na reunião, exceto os que o próprio documento identifica como padrão do Prisma.
@@ -206,8 +209,8 @@ O que foi verificado de forma mecânica no repositório final:
 
 O que foi verificado por revisão, e suas limitações:
 
-- **Revisão independente por outro provedor de LLM.** A auditoria adversarial foi feita pelo mesmo gerador, em contexto novo. As rotas de validação cruzada configuradas estavam indisponíveis neste momento: `mas-validate` (validador padrão DeepSeek) foi acionado e devolveu erro de provedor; a segunda opinião pela Alibaba respondeu cota esgotada até 16/12/2026. Vale repetir essa validação quando uma das rotas voltar.
-- **Revisão de segurança: veredito "bloqueado" quanto ao desenho, não quanto à documentação.** 10 achados, todos aceitos e incorporados. O principal: a reunião aceitou que qualquer usuário autenticado gerencia os cadastros "por enquanto" ([09:37] Sofia) e o código tem registro de usuário público, sem vínculo entre usuário e cliente — qualquer pessoa pode se cadastrar e passar a receber os eventos de pedidos de qualquer cliente. Isso é bloqueante de produção e está registrado como tal (FDD-RISCO-05, FDD-RISCO-06, PRD-RISCO-05, RFC-RISCO-07). Corrigir exige mexer no código ou reabrir uma decisão da reunião, o que a entrega documental não pode fazer por conta própria: a proposta FDD-PROP-44 faz as duas coisas e está marcada como proposta. Esse revisor é do mesmo provedor do coordenador, que a política do dono não aceita como validador de entrega: o veredito é consultivo.
+- **Revisão independente por outro provedor de LLM.** A auditoria adversarial foi feita pelo mesmo gerador, em contexto novo. - **Validação cruzada por provedor diferente do gerador.** As rotas configuradas para isso estavam indisponíveis na data: uma devolveu erro de provedor, a outra respondeu cota esgotada. No lugar, o council do Ajuste 10 deu um veredito de modelos de três famílias diferentes da do gerador (GLM, Qwen e Llama). Ele foi consultivo: deliberou sobre o bloqueio de segurança e não fez revisão linha a linha dos documentos. A ferramenta de council padrão do ambiente também estava indisponível, e o council foi montado com os provedores acessíveis.
+- **Revisão de segurança: veredito "bloqueado" quanto ao deploy da feature, não quanto à documentação.** 10 achados, todos aceitos e incorporados. O principal: a reunião aceitou que qualquer usuário autenticado gerencia os cadastros "por enquanto" ([09:37] Sofia) e o código tem registro de usuário público, sem vínculo entre usuário e cliente. Qualquer pessoa se cadastra e passa a receber os eventos de pedidos de qualquer cliente. Ler esses pedidos já era possível antes da feature; o que ela acrescenta é o envio automático, o poder de alterar cadastros alheios e a resposta do destino guardada no histórico. Está registrado como bloqueante de deploy, a resolver na revisão de segurança que o time agendou ([09:46] Sofia): FDD-RISCO-05, FDD-RISCO-06, PRD-RISCO-05 e RFC-RISCO-07. Corrigir exige mexer no código ou reabrir uma decisão da reunião, o que a entrega documental não pode fazer por conta própria: a proposta FDD-PROP-44 faz as duas coisas e está marcada como proposta. Um council de modelos de três famílias diferentes da do revisor confirmou essa leitura (Ajuste 10).
 - **Nenhum teste da aplicação foi executado.** A entrega é documental e o código não foi alterado; a suíte existente depende de MySQL e não é necessária para estes artefatos.
 - **O inventário da transcrição é uma ajuda, não uma prova.** Ele guiou a completude (cada decisão e requisito extraído foi localizado nos documentos), mas a conferência de cada item nos documentos foi feita contra a transcrição, não contra o inventário.
 
@@ -215,20 +218,20 @@ O que foi verificado por revisão, e suas limitações:
 
 | Documento | Tamanho (palavras, incluindo tabelas) | IDs definidos |
 |---|---|---|
-| `docs/PRD.md` | 6399 | 125 |
-| `docs/RFC.md` | 2571 | 57 |
-| `docs/FDD.md` | 23494 | 350 |
+| `docs/PRD.md` | 6455 | 125 |
+| `docs/RFC.md` | 2608 | 57 |
+| `docs/FDD.md` | 23623 | 350 |
 | `docs/TRACKER.md` | 9871 | — |
-| `README.md` | 3465 | — |
+| `README.md` | 3938 | — |
 | `docs/adrs/` (8 ADRs) | 11345 | 22 |
 | `TRANSCRICAO.md` (fonte) | 3287 | — |
 
-- 49 chamadas ao gerador (`ask etipi`) — geração, inventário e auditoria —, incluindo sondas e as 3 que falharam; 11 delas de auditoria.
-- 3.521.851 tokens contabilizados pelo harness; cerca de US$ 45.79.
+- 49 chamadas ao gerador — geração, inventário e auditoria —, incluindo sondas e as 3 que falharam; 11 delas de auditoria.
+- 3.521.851 tokens contabilizados pelo harness nas chamadas ao gerador.
 - 79 achados na auditoria do gerador e 10 na revisão de segurança isolada; todos triados, e os aceitos corrigidos com casamento exato de texto.
-- 128 pares minuto/falante na transcrição; 1319 citações nos documentos.
+- 128 pares minuto/falante na transcrição; 1328 citações nos documentos.
 
-A geração usou 49 chamadas ao gerador e consumiu cerca de US$ 45.79 em tokens.
+A geração usou 49 chamadas ao gerador. O council do Ajuste 10 somou seis chamadas com êxito — duas respostas independentes, duas avaliações por pares e duas sínteses do chairman, sendo a segunda com as restrições da entrega explicitadas — e duas tentativas frustradas de incluir o gerador.
 
 ## Enunciado original
 

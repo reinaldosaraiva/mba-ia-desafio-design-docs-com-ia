@@ -87,7 +87,7 @@ Todas foram discutidas e descartadas na reunião.
 | RFC-QA-02 | Escala para múltiplos workers em paralelo | "Problema do futuro" (`[09:13] Diego`) | Documentar o worker único como limitação conhecida (`[09:13] Larissa`) |
 | RFC-QA-03 | Arquivamento das linhas já entregues, "depois de 30 dias ou assim" | Fora do escopo (`[09:08] Diego`) | Nenhuma ação nesta feature |
 | RFC-QA-04 | E-mail ao cliente cujo webhook está com problema | Fora de escopo desta fase (`[09:37] Larissa`) | Talvez na próxima fase, após medir o impacto ("futuro", `[09:38] Marcos`) |
-| RFC-QA-05 | Endurecimento da autorização do cadastro de webhooks | Por enquanto, qualquer role autenticada (`[09:37] Sofia`) | "Mais pra frente a gente pode endurecer", sem prazo |
+| RFC-QA-05 | Endurecimento da autorização do cadastro de webhooks | Por enquanto, qualquer role autenticada (`[09:37] Sofia`), sob a premissa de `[09:32] Marcos`, que não vale no código (ver RFC-RISCO-07) | "Mais pra frente a gente pode endurecer", sem prazo |
 
 ### 6.2 Interpretações adotadas a confirmar na revisão
 
@@ -132,7 +132,7 @@ Probabilidade e impacto são avaliação deste documento; a reunião não os cla
 | RFC-RISCO-04 | Falha no registro bloqueia a mudança de status | Baixa | Alta | Rollback, como decidido; sem chamada HTTP na transação | `[09:40] Bruno` |
 | RFC-RISCO-05 | Perda da Atlas para o concorrente sem entrega no trimestre | Média | Alta | Confirmação do prazo com a Atlas, pendente (RFC-PROX-03) | `[09:00] Marcos` |
 | RFC-RISCO-06 | (inferência deste documento) Três sprints excederem o fim de novembro pedido pela Atlas | Média | Alta | Confirmação do prazo com a Atlas (RFC-PROX-03) | `[09:45] Marcos` |
-| RFC-RISCO-07 | (inferência deste documento a partir do código) O registro de usuário é público e não há vínculo entre usuário e cliente; com o acesso amplo aceito em `[09:37] Sofia`, qualquer pessoa pode cadastrar um webhook e passar a receber os eventos de pedidos de qualquer cliente | Alta | Alta | Bloqueante de produção: reexaminar o acesso amplo na revisão de segurança (RFC-PROX-02); detalhe no FDD (FDD-RISCO-05) | `src/modules/auth/auth.routes.ts` |
+| RFC-RISCO-07 | (inferência deste documento a partir do código) O registro de usuário é público e não há vínculo entre usuário e cliente; com o acesso amplo aceito em `[09:37] Sofia`, qualquer pessoa pode cadastrar um webhook e passar a receber os eventos de pedidos de qualquer cliente. A leitura desses pedidos já é possível hoje pela API; a feature acrescenta o envio automático e o poder de alterar cadastros alheios | Alta | Alta | Bloqueante de deploy: reexaminar o acesso amplo na revisão de segurança (RFC-PROX-02); detalhe no FDD (FDD-RISCO-05) | `src/modules/auth/auth.routes.ts` |
 
 ## 8. Decisões relacionadas
 
