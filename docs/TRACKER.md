@@ -7,7 +7,7 @@ Este tracker é a referência cruzada do pacote: para cada item registrado nos d
 | Itens rastreados (tabela principal) | 449 |
 | Com `Fonte = TRANSCRICAO` | 392 (87.3%) |
 | Com `Fonte = CODIGO` | 57 |
-| Propostas sem origem direta (apêndice) | 105 |
+| Propostas sem origem direta (apêndice, fora da tabela) | 105 |
 | Cobertura | 81.0% dos IDs definidos nos documentos têm linha na tabela principal |
 
 ## Como ler
@@ -16,7 +16,7 @@ Este tracker é a referência cruzada do pacote: para cada item registrado nos d
 - **Documento** é o arquivo onde o item aparece.
 - **Tipo** decorre do sufixo do ID (legenda abaixo).
 - **Fonte** é `TRANSCRICAO` ou `CODIGO`. Para `TRANSCRICAO`, **Localização** traz o minuto e o falante (`[hh:mm] Nome`) da fala que originou o item; para decisão fechada por várias vozes, a fala que a fecha. Para `CODIGO`, **Localização** é o caminho do arquivo que sustenta a afirmação.
-- As propostas que a documentação precisou fazer porque a reunião não decidiu um detalhe de implementação estão no apêndice, com `Fonte = PROPOSTA`: não são requisito nem decisão.
+- As propostas que a documentação precisou fazer porque a reunião não decidiu um detalhe de implementação estão listadas no apêndice, fora da tabela: não são requisito nem decisão e, por isso, não têm Fonte.
 
 ## Legenda de tipos
 
@@ -509,112 +509,110 @@ Este tracker é a referência cruzada do pacote: para cada item registrado nos d
 
 ## Apêndice — propostas sem origem direta, a confirmar na revisão
 
-Estes itens foram introduzidos pela documentação porque a reunião não fechou o detalhe correspondente. Cada um está marcado como proposta no documento onde aparece e responde a uma lacuna (`-GAP-`) da seção 15 do FDD. Não são requisito nem decisão; a coluna Localização não se aplica.
+Estes itens foram introduzidos pela documentação porque a reunião não fechou o detalhe correspondente. Cada um está marcado como proposta no documento onde aparece e responde a uma lacuna (`-GAP-`) da seção 15 do FDD. Não são requisito nem decisão e, por não terem origem na transcrição nem no código, ficam fora da tabela de rastreabilidade: a lista abaixo só registra onde cada uma aparece.
 
-| ID | Documento | Tipo | Conteúdo (resumo) | Fonte | Localização |
-|---|---|---|---|---|---|
-| FDD-DADOS-15 | docs/FDD.md | Elemento de modelo de dados | Índice proposto em `webhooks.customerId` | PROPOSTA | n/a |
-| FDD-DADOS-16 | docs/FDD.md | Elemento de modelo de dados | Uso das colunas de secret na rotação e na assinatura | PROPOSTA | n/a |
-| FDD-DADOS-19 | docs/FDD.md | Elemento de modelo de dados | `webhook_outbox.webhookId`, cadastro de destino | PROPOSTA | n/a |
-| FDD-DADOS-20 | docs/FDD.md | Elemento de modelo de dados | `webhook_outbox.orderId` sem chave estrangeira | PROPOSTA | n/a |
-| FDD-DADOS-21 | docs/FDD.md | Elemento de modelo de dados | `webhook_outbox.customerId` sem chave estrangeira | PROPOSTA | n/a |
-| FDD-DADOS-24 | docs/FDD.md | Elemento de modelo de dados | `webhook_outbox.attempts`, contagem de envios | PROPOSTA | n/a |
-| FDD-DADOS-25 | docs/FDD.md | Elemento de modelo de dados | `webhook_outbox.nextAttemptAt`, próxima tentativa | PROPOSTA | n/a |
-| FDD-DADOS-29 | docs/FDD.md | Elemento de modelo de dados | Histórico com uma linha por request enviado | PROPOSTA | n/a |
-| FDD-DADOS-32 | docs/FDD.md | Elemento de modelo de dados | `webhook_deliveries.eventId` para correlação | PROPOSTA | n/a |
-| FDD-DADOS-37 | docs/FDD.md | Elemento de modelo de dados | `webhook_deliveries.errorMessage` para falha sem resposta | PROPOSTA | n/a |
-| FDD-DADOS-40 | docs/FDD.md | Elemento de modelo de dados | Índices propostos em `webhookId` e `createdAt` do histórico | PROPOSTA | n/a |
-| FDD-DADOS-42 | docs/FDD.md | Elemento de modelo de dados | `webhook_dead_letter.outboxId` para recolocar a mesma linha | PROPOSTA | n/a |
-| FDD-DADOS-43 | docs/FDD.md | Elemento de modelo de dados | `webhook_dead_letter.eventId` preservado no replay | PROPOSTA | n/a |
-| FDD-DADOS-44 | docs/FDD.md | Elemento de modelo de dados | `webhook_dead_letter.webhookId`, cadastro de destino | PROPOSTA | n/a |
-| FDD-DADOS-45 | docs/FDD.md | Elemento de modelo de dados | `webhook_dead_letter.orderId` sem chave estrangeira | PROPOSTA | n/a |
-| FDD-DADOS-46 | docs/FDD.md | Elemento de modelo de dados | `webhook_dead_letter.customerId` sem chave estrangeira | PROPOSTA | n/a |
-| FDD-DADOS-49 | docs/FDD.md | Elemento de modelo de dados | `webhook_dead_letter.attempts`, envios até a DLQ | PROPOSTA | n/a |
-| FDD-DADOS-51 | docs/FDD.md | Elemento de modelo de dados | DLQ sem índice além da chave primária | PROPOSTA | n/a |
-| FDD-DADOS-52 | docs/FDD.md | Elemento de modelo de dados | Remoção de pedido não afeta as linhas de evento (sem chave estrangeira) | PROPOSTA | n/a |
-| FDD-DADOS-53 | docs/FDD.md | Elemento de modelo de dados | Tabelas de evento sem chave estrangeira para `customers` | PROPOSTA | n/a |
-| FDD-DADOS-54 | docs/FDD.md | Elemento de modelo de dados | Chave estrangeira `webhooks.customerId` com `ON DELETE RESTRICT` | PROPOSTA | n/a |
-| FDD-DADOS-55 | docs/FDD.md | Elemento de modelo de dados | Entregas pendentes de cadastro removido ou inativo vão para a DLQ | PROPOSTA | n/a |
-| FDD-DEP-07 | docs/FDD.md | Dependência ou compatibilidade | `node:crypto` para HMAC-SHA256 e geração da secret | PROPOSTA | n/a |
-| FDD-DEP-08 | docs/FDD.md | Dependência ou compatibilidade | `fetch` global do Node 20 para a entrega, com timeout de 10 segundos | PROPOSTA | n/a |
-| FDD-DEP-10 | docs/FDD.md | Dependência ou compatibilidade | Nenhuma dependência nova | PROPOSTA | n/a |
-| FDD-ERRO-02 | docs/FDD.md | Erro | `WEBHOOK_DEAD_LETTER_NOT_FOUND` (404) para item inexistente no replay | PROPOSTA | n/a |
-| FDD-ERRO-05 | docs/FDD.md | Erro | Erro de conexão como motivo de falha de entrega | PROPOSTA | n/a |
-| FDD-ERRO-06 | docs/FDD.md | Erro | Resposta fora de 2xx como motivo de falha de entrega | PROPOSTA | n/a |
-| FDD-ERRO-07 | docs/FDD.md | Erro | Cadastro desativado com entrega pendente vai para a DLQ | PROPOSTA | n/a |
-| FDD-ERRO-08 | docs/FDD.md | Erro | Cadastro removido com entrega pendente vai para a DLQ | PROPOSTA | n/a |
-| FDD-FLUXO-11 | docs/FDD.md | Passo de fluxo | Paralelismo dentro do lote e ciclos sem sobreposição | PROPOSTA | n/a |
-| FDD-FLUXO-12 | docs/FDD.md | Passo de fluxo | Linhas presas em processamento após queda; retomada é proposta | PROPOSTA | n/a |
-| FDD-FLUXO-13 | docs/FDD.md | Passo de fluxo | Cadastro inativo ou removido desvia a linha para a fila de mortos | PROPOSTA | n/a |
-| FDD-FLUXO-20 | docs/FDD.md | Passo de fluxo | Classificação: 2xx é sucesso; demais respostas, erro de rede e timeout são falha | PROPOSTA | n/a |
-| FDD-FLUXO-25 | docs/FDD.md | Passo de fluxo | Log estruturado por tentativa com `event_id` | PROPOSTA | n/a |
-| FDD-FLUXO-26 | docs/FDD.md | Passo de fluxo | Linha marcada como falhou antes da ida à fila de mortos | PROPOSTA | n/a |
-| FDD-FLUXO-28 | docs/FDD.md | Passo de fluxo | Repetição da movimentação para a fila de mortos no ciclo seguinte, em caso de falha | PROPOSTA | n/a |
-| FDD-FLUXO-29 | docs/FDD.md | Passo de fluxo | Log estruturado da ida à fila de mortos | PROPOSTA | n/a |
-| FDD-FLUXO-35 | docs/FDD.md | Passo de fluxo | Replay de evento com cadastro inativo ou removido volta à fila de mortos | PROPOSTA | n/a |
-| FDD-FLUXO-37 | docs/FDD.md | Passo de fluxo | Geração da nova secret com gerador seguro | PROPOSTA | n/a |
-| FDD-FLUXO-40 | docs/FDD.md | Passo de fluxo | Secret usada na assinatura durante a carência | PROPOSTA | n/a |
-| FDD-GAP-39 | docs/FDD.md | Lacuna do desenho proposto | Log de publicação emitido dentro da transação, antes do commit | PROPOSTA | n/a |
-| FDD-GAP-44 | docs/FDD.md | Lacuna do desenho proposto | Quantidade e granularidade das migrations da feature | PROPOSTA | n/a |
-| FDD-OBS-04 | docs/FDD.md | Observabilidade | Logger filho no worker para distinguir o processo, já que `createLogger` fixa `base.service` | PROPOSTA | n/a |
-| FDD-OBS-06 | docs/FDD.md | Observabilidade | Log `webhook_config_changed` nas operações de cadastro e rotação de secret | PROPOSTA | n/a |
-| FDD-OBS-07 | docs/FDD.md | Observabilidade | Log `webhook_event_published` em `publishWebhookEvent`, com quantidade de linhas inseridas | PROPOSTA | n/a |
-| FDD-OBS-08 | docs/FDD.md | Observabilidade | Log `webhook_worker_started` com intervalo de polling e tamanho do lote | PROPOSTA | n/a |
-| FDD-OBS-09 | docs/FDD.md | Observabilidade | Log `webhook_worker_stopped` com o sinal recebido | PROPOSTA | n/a |
-| FDD-OBS-11 | docs/FDD.md | Observabilidade | Log `webhook_delivery_succeeded` com tentativa, status HTTP, duração e latência | PROPOSTA | n/a |
-| FDD-OBS-12 | docs/FDD.md | Observabilidade | Log `webhook_delivery_failed` com tipo de falha e próxima tentativa | PROPOSTA | n/a |
-| FDD-OBS-13 | docs/FDD.md | Observabilidade | Log `webhook_dead_lettered` com total de tentativas e motivo | PROPOSTA | n/a |
-| FDD-OBS-14 | docs/FDD.md | Observabilidade | Log `webhook_stuck_recovered` na retomada de linhas presas em processamento | PROPOSTA | n/a |
-| FDD-OBS-15 | docs/FDD.md | Observabilidade | Log `webhook_poll_failed` quando o ciclo de polling falha | PROPOSTA | n/a |
-| FDD-OBS-17 | docs/FDD.md | Observabilidade | Métrica de eventos inseridos na outbox | PROPOSTA | n/a |
-| FDD-OBS-18 | docs/FDD.md | Observabilidade | Métrica de entregas por resultado | PROPOSTA | n/a |
-| FDD-OBS-19 | docs/FDD.md | Observabilidade | Métrica de tentativas por evento | PROPOSTA | n/a |
-| FDD-OBS-20 | docs/FDD.md | Observabilidade | Métrica de eventos na fila de mortos | PROPOSTA | n/a |
-| FDD-OBS-21 | docs/FDD.md | Observabilidade | Métrica de tempo entre a inserção e a entrega, comparada ao limite de 10 segundos | PROPOSTA | n/a |
-| FDD-OBS-22 | docs/FDD.md | Observabilidade | Métrica de eventos pendentes por consulta à outbox | PROPOSTA | n/a |
-| FDD-OBS-24 | docs/FDD.md | Observabilidade | Correlação pelo identificador do evento entre outbox, logs, histórico e `X-Event-Id` | PROPOSTA | n/a |
-| FDD-PROP-01 | docs/FDD.md | Proposta a confirmar | Uma linha por evento × destino | PROPOSTA | n/a |
-| FDD-PROP-02 | docs/FDD.md | Proposta a confirmar | Pendente com próxima tentativa; "falhou" antes da DLQ; saída da outbox | PROPOSTA | n/a |
-| FDD-PROP-03 | docs/FDD.md | Proposta a confirmar | Retomar linhas presas após limite a definir | PROPOSTA | n/a |
-| FDD-PROP-04 | docs/FDD.md | Proposta a confirmar | Lote pequeno com envio paralelo; números a definir | PROPOSTA | n/a |
-| FDD-PROP-05 | docs/FDD.md | Proposta a confirmar | 2xx é sucesso; o resto é falha | PROPOSTA | n/a |
-| FDD-PROP-06 | docs/FDD.md | Proposta a confirmar | HMAC sobre os bytes enviados, hexadecimal, sem prefixo | PROPOSTA | n/a |
-| FDD-PROP-07 | docs/FDD.md | Proposta a confirmar | Deduplicação e replay pelos campos assinados do corpo | PROPOSTA | n/a |
-| FDD-PROP-08 | docs/FDD.md | Proposta a confirmar | Secret recuperável e redação estendida no logger | PROPOSTA | n/a |
-| FDD-PROP-09 | docs/FDD.md | Proposta a confirmar | Emissão só em changeStatus | PROPOSTA | n/a |
-| FDD-PROP-10 | docs/FDD.md | Proposta a confirmar | URL sem https rejeitada pelo Zod com VALIDATION_ERROR | PROPOSTA | n/a |
-| FDD-PROP-11 | docs/FDD.md | Proposta a confirmar | 1 envio inicial + 5 novas tentativas | PROPOSTA | n/a |
-| FDD-PROP-12 | docs/FDD.md | Proposta a confirmar | camelCase e campo statuses | PROPOSTA | n/a |
-| FDD-PROP-13 | docs/FDD.md | Proposta a confirmar | customerId em body/query; rota de rotação; sem consulta por id | PROPOSTA | n/a |
-| FDD-PROP-14 | docs/FDD.md | Proposta a confirmar | Nomes de arquivos e tabelas usados no documento | PROPOSTA | n/a |
-| FDD-PROP-15 | docs/FDD.md | Proposta a confirmar | Pendentes de cadastro inativo ou removido vão para a DLQ | PROPOSTA | n/a |
-| FDD-PROP-16 | docs/FDD.md | Proposta a confirmar | Payload acima de 64KB direto para a DLQ | PROPOSTA | n/a |
-| FDD-PROP-17 | docs/FDD.md | Proposta a confirmar | fetch global e node:crypto, sem dependência nova | PROPOSTA | n/a |
-| FDD-PROP-18 | docs/FDD.md | Proposta a confirmar | Valores decididos como constantes do módulo | PROPOSTA | n/a |
-| FDD-PROP-19 | docs/FDD.md | Proposta a confirmar | Gerador seguro do Node; tamanho com Sofia | PROPOSTA | n/a |
-| FDD-PROP-20 | docs/FDD.md | Proposta a confirmar | Métricas por logs e correlação por event_id | PROPOSTA | n/a |
-| FDD-PROP-21 | docs/FDD.md | Proposta a confirmar | Assinar com a secret antiga durante as 24 horas | PROPOSTA | n/a |
-| FDD-PROP-22 | docs/FDD.md | Proposta a confirmar | Tabelas de evento sem FK para pedido e cliente | PROPOSTA | n/a |
-| FDD-PROP-23 | docs/FDD.md | Proposta a confirmar | Replay com mesmo id e payload, contagem zerada | PROPOSTA | n/a |
-| FDD-PROP-24 | docs/FDD.md | Proposta a confirmar | Não entregar evento posterior com anterior pendente | PROPOSTA | n/a |
-| FDD-PROP-25 | docs/FDD.md | Proposta a confirmar | A meta de 10 segundos é medida do commit da mudança de status até o início do envio inicial; as novas tentativas ficam fora da meta. A métrica de produto do PRD (PRD-OBJ-01) mede até a chegada ao cliente: as duas leituras devem ser reconciliadas na revisão | PROPOSTA | n/a |
-| FDD-PROP-26 | docs/FDD.md | Proposta a confirmar | O histórico devolve as últimas 100 entregas em lista simples, na chave `data`, sem paginação | PROPOSTA | n/a |
-| FDD-PROP-27 | docs/FDD.md | Proposta a confirmar | O filtro de inserção só considera cadastros ativos | PROPOSTA | n/a |
-| FDD-PROP-28 | docs/FDD.md | Proposta a confirmar | `statuses` aceita ao menos um valor, sem repetição | PROPOSTA | n/a |
-| FDD-PROP-29 | docs/FDD.md | Proposta a confirmar | O cadastro nasce com `active: true` | PROPOSTA | n/a |
-| FDD-PROP-30 | docs/FDD.md | Proposta a confirmar | A listagem inclui os cadastros inativos, com `active: false` | PROPOSTA | n/a |
-| FDD-PROP-31 | docs/FDD.md | Proposta a confirmar | A edição aceita `url`, `statuses` e `active`; não troca o cliente do cadastro | PROPOSTA | n/a |
-| FDD-PROP-32 | docs/FDD.md | Proposta a confirmar | Rotação e replay respondem `200`; a rotação devolve a nova secret e o instante em que a anterior deixa de valer; o replay devolve os identificadores do evento e do cadastro | PROPOSTA | n/a |
-| FDD-PROP-33 | docs/FDD.md | Proposta a confirmar | A entrega usa `POST` e não segue redirecionamento; resposta 3xx conta como falha | PROPOSTA | n/a |
-| FDD-PROP-34 | docs/FDD.md | Proposta a confirmar | `X-Timestamp` vai em ISO 8601, em UTC | PROPOSTA | n/a |
-| FDD-PROP-35 | docs/FDD.md | Proposta a confirmar | O item da fila de mortos permanece nela após o replay, com a data do último replay | PROPOSTA | n/a |
-| FDD-PROP-36 | docs/FDD.md | Proposta a confirmar | Em rotação repetida, a secret que ainda estava em carência é descartada; só a última anterior é mantida | PROPOSTA | n/a |
-| FDD-PROP-37 | docs/FDD.md | Proposta a confirmar | O histórico guarda o status HTTP e o corpo da resposta do cliente, com o corpo truncado num limite a definir | PROPOSTA | n/a |
-| FDD-PROP-38 | docs/FDD.md | Proposta a confirmar | `webhookId` nas tabelas de evento não tem chave estrangeira; o histórico é mantido quando o cadastro é removido | PROPOSTA | n/a |
-| FDD-PROP-39 | docs/FDD.md | Proposta a confirmar | Manter os padrões do Prisma na transação de `changeStatus` e medir a duração dela; definir `timeout` explícito só se a medição justificar | PROPOSTA | n/a |
-| FDD-PROP-40 | docs/FDD.md | Proposta a confirmar | O encerramento do worker aguarda o término do lote corrente antes de desconectar o Prisma | PROPOSTA | n/a |
-| FDD-PROP-41 | docs/FDD.md | Proposta a confirmar | O limite de 64KB aplica-se aos bytes do corpo JSON serializado em UTF-8 | PROPOSTA | n/a |
-| FDD-PROP-42 | docs/FDD.md | Proposta a confirmar | Uma única migration cria as quatro tabelas novas | PROPOSTA | n/a |
-| FDD-PROP-43 | docs/FDD.md | Proposta a confirmar | O destino é validado no cadastro e a cada envio: o worker recusa os que resolvem para endereços privados, loopback ou link-local, conecta ao endereço validado (contra troca de DNS) e exige certificado TLS válido; entregas com destino recusado não têm resposta guardada | PROPOSTA | n/a |
-| FDD-PROP-44 | docs/FDD.md | Proposta a confirmar | Até existir vínculo entre usuário e cliente, restringir os contratos de gerenciamento (FDD-CONTRATO-01 a FDD-CONTRATO-06) a `requireRole('ADMIN')` e checar a quem pertence o cadastro nas rotas por id. Reabre a decisão de `[09:37] Sofia`; não é requisito | PROPOSTA | n/a |
-| FDD-PROP-45 | docs/FDD.md | Proposta a confirmar | Teto pequeno de cadastros por cliente, com número a fixar na revisão do FDD | PROPOSTA | n/a |
+- `FDD-DADOS-15` (docs/FDD.md, Elemento de modelo de dados): Índice proposto em `webhooks.customerId`
+- `FDD-DADOS-16` (docs/FDD.md, Elemento de modelo de dados): Uso das colunas de secret na rotação e na assinatura
+- `FDD-DADOS-19` (docs/FDD.md, Elemento de modelo de dados): `webhook_outbox.webhookId`, cadastro de destino
+- `FDD-DADOS-20` (docs/FDD.md, Elemento de modelo de dados): `webhook_outbox.orderId` sem chave estrangeira
+- `FDD-DADOS-21` (docs/FDD.md, Elemento de modelo de dados): `webhook_outbox.customerId` sem chave estrangeira
+- `FDD-DADOS-24` (docs/FDD.md, Elemento de modelo de dados): `webhook_outbox.attempts`, contagem de envios
+- `FDD-DADOS-25` (docs/FDD.md, Elemento de modelo de dados): `webhook_outbox.nextAttemptAt`, próxima tentativa
+- `FDD-DADOS-29` (docs/FDD.md, Elemento de modelo de dados): Histórico com uma linha por request enviado
+- `FDD-DADOS-32` (docs/FDD.md, Elemento de modelo de dados): `webhook_deliveries.eventId` para correlação
+- `FDD-DADOS-37` (docs/FDD.md, Elemento de modelo de dados): `webhook_deliveries.errorMessage` para falha sem resposta
+- `FDD-DADOS-40` (docs/FDD.md, Elemento de modelo de dados): Índices propostos em `webhookId` e `createdAt` do histórico
+- `FDD-DADOS-42` (docs/FDD.md, Elemento de modelo de dados): `webhook_dead_letter.outboxId` para recolocar a mesma linha
+- `FDD-DADOS-43` (docs/FDD.md, Elemento de modelo de dados): `webhook_dead_letter.eventId` preservado no replay
+- `FDD-DADOS-44` (docs/FDD.md, Elemento de modelo de dados): `webhook_dead_letter.webhookId`, cadastro de destino
+- `FDD-DADOS-45` (docs/FDD.md, Elemento de modelo de dados): `webhook_dead_letter.orderId` sem chave estrangeira
+- `FDD-DADOS-46` (docs/FDD.md, Elemento de modelo de dados): `webhook_dead_letter.customerId` sem chave estrangeira
+- `FDD-DADOS-49` (docs/FDD.md, Elemento de modelo de dados): `webhook_dead_letter.attempts`, envios até a DLQ
+- `FDD-DADOS-51` (docs/FDD.md, Elemento de modelo de dados): DLQ sem índice além da chave primária
+- `FDD-DADOS-52` (docs/FDD.md, Elemento de modelo de dados): Remoção de pedido não afeta as linhas de evento (sem chave estrangeira)
+- `FDD-DADOS-53` (docs/FDD.md, Elemento de modelo de dados): Tabelas de evento sem chave estrangeira para `customers`
+- `FDD-DADOS-54` (docs/FDD.md, Elemento de modelo de dados): Chave estrangeira `webhooks.customerId` com `ON DELETE RESTRICT`
+- `FDD-DADOS-55` (docs/FDD.md, Elemento de modelo de dados): Entregas pendentes de cadastro removido ou inativo vão para a DLQ
+- `FDD-DEP-07` (docs/FDD.md, Dependência ou compatibilidade): `node:crypto` para HMAC-SHA256 e geração da secret
+- `FDD-DEP-08` (docs/FDD.md, Dependência ou compatibilidade): `fetch` global do Node 20 para a entrega, com timeout de 10 segundos
+- `FDD-DEP-10` (docs/FDD.md, Dependência ou compatibilidade): Nenhuma dependência nova
+- `FDD-ERRO-02` (docs/FDD.md, Erro): `WEBHOOK_DEAD_LETTER_NOT_FOUND` (404) para item inexistente no replay
+- `FDD-ERRO-05` (docs/FDD.md, Erro): Erro de conexão como motivo de falha de entrega
+- `FDD-ERRO-06` (docs/FDD.md, Erro): Resposta fora de 2xx como motivo de falha de entrega
+- `FDD-ERRO-07` (docs/FDD.md, Erro): Cadastro desativado com entrega pendente vai para a DLQ
+- `FDD-ERRO-08` (docs/FDD.md, Erro): Cadastro removido com entrega pendente vai para a DLQ
+- `FDD-FLUXO-11` (docs/FDD.md, Passo de fluxo): Paralelismo dentro do lote e ciclos sem sobreposição
+- `FDD-FLUXO-12` (docs/FDD.md, Passo de fluxo): Linhas presas em processamento após queda; retomada é proposta
+- `FDD-FLUXO-13` (docs/FDD.md, Passo de fluxo): Cadastro inativo ou removido desvia a linha para a fila de mortos
+- `FDD-FLUXO-20` (docs/FDD.md, Passo de fluxo): Classificação: 2xx é sucesso; demais respostas, erro de rede e timeout são falha
+- `FDD-FLUXO-25` (docs/FDD.md, Passo de fluxo): Log estruturado por tentativa com `event_id`
+- `FDD-FLUXO-26` (docs/FDD.md, Passo de fluxo): Linha marcada como falhou antes da ida à fila de mortos
+- `FDD-FLUXO-28` (docs/FDD.md, Passo de fluxo): Repetição da movimentação para a fila de mortos no ciclo seguinte, em caso de falha
+- `FDD-FLUXO-29` (docs/FDD.md, Passo de fluxo): Log estruturado da ida à fila de mortos
+- `FDD-FLUXO-35` (docs/FDD.md, Passo de fluxo): Replay de evento com cadastro inativo ou removido volta à fila de mortos
+- `FDD-FLUXO-37` (docs/FDD.md, Passo de fluxo): Geração da nova secret com gerador seguro
+- `FDD-FLUXO-40` (docs/FDD.md, Passo de fluxo): Secret usada na assinatura durante a carência
+- `FDD-GAP-39` (docs/FDD.md, Lacuna do desenho proposto): Log de publicação emitido dentro da transação, antes do commit
+- `FDD-GAP-44` (docs/FDD.md, Lacuna do desenho proposto): Quantidade e granularidade das migrations da feature
+- `FDD-OBS-04` (docs/FDD.md, Observabilidade): Logger filho no worker para distinguir o processo, já que `createLogger` fixa `base.service`
+- `FDD-OBS-06` (docs/FDD.md, Observabilidade): Log `webhook_config_changed` nas operações de cadastro e rotação de secret
+- `FDD-OBS-07` (docs/FDD.md, Observabilidade): Log `webhook_event_published` em `publishWebhookEvent`, com quantidade de linhas inseridas
+- `FDD-OBS-08` (docs/FDD.md, Observabilidade): Log `webhook_worker_started` com intervalo de polling e tamanho do lote
+- `FDD-OBS-09` (docs/FDD.md, Observabilidade): Log `webhook_worker_stopped` com o sinal recebido
+- `FDD-OBS-11` (docs/FDD.md, Observabilidade): Log `webhook_delivery_succeeded` com tentativa, status HTTP, duração e latência
+- `FDD-OBS-12` (docs/FDD.md, Observabilidade): Log `webhook_delivery_failed` com tipo de falha e próxima tentativa
+- `FDD-OBS-13` (docs/FDD.md, Observabilidade): Log `webhook_dead_lettered` com total de tentativas e motivo
+- `FDD-OBS-14` (docs/FDD.md, Observabilidade): Log `webhook_stuck_recovered` na retomada de linhas presas em processamento
+- `FDD-OBS-15` (docs/FDD.md, Observabilidade): Log `webhook_poll_failed` quando o ciclo de polling falha
+- `FDD-OBS-17` (docs/FDD.md, Observabilidade): Métrica de eventos inseridos na outbox
+- `FDD-OBS-18` (docs/FDD.md, Observabilidade): Métrica de entregas por resultado
+- `FDD-OBS-19` (docs/FDD.md, Observabilidade): Métrica de tentativas por evento
+- `FDD-OBS-20` (docs/FDD.md, Observabilidade): Métrica de eventos na fila de mortos
+- `FDD-OBS-21` (docs/FDD.md, Observabilidade): Métrica de tempo entre a inserção e a entrega, comparada ao limite de 10 segundos
+- `FDD-OBS-22` (docs/FDD.md, Observabilidade): Métrica de eventos pendentes por consulta à outbox
+- `FDD-OBS-24` (docs/FDD.md, Observabilidade): Correlação pelo identificador do evento entre outbox, logs, histórico e `X-Event-Id`
+- `FDD-PROP-01` (docs/FDD.md, Proposta a confirmar): Uma linha por evento × destino
+- `FDD-PROP-02` (docs/FDD.md, Proposta a confirmar): Pendente com próxima tentativa; "falhou" antes da DLQ; saída da outbox
+- `FDD-PROP-03` (docs/FDD.md, Proposta a confirmar): Retomar linhas presas após limite a definir
+- `FDD-PROP-04` (docs/FDD.md, Proposta a confirmar): Lote pequeno com envio paralelo; números a definir
+- `FDD-PROP-05` (docs/FDD.md, Proposta a confirmar): 2xx é sucesso; o resto é falha
+- `FDD-PROP-06` (docs/FDD.md, Proposta a confirmar): HMAC sobre os bytes enviados, hexadecimal, sem prefixo
+- `FDD-PROP-07` (docs/FDD.md, Proposta a confirmar): Deduplicação e replay pelos campos assinados do corpo
+- `FDD-PROP-08` (docs/FDD.md, Proposta a confirmar): Secret recuperável e redação estendida no logger
+- `FDD-PROP-09` (docs/FDD.md, Proposta a confirmar): Emissão só em changeStatus
+- `FDD-PROP-10` (docs/FDD.md, Proposta a confirmar): URL sem https rejeitada pelo Zod com VALIDATION_ERROR
+- `FDD-PROP-11` (docs/FDD.md, Proposta a confirmar): 1 envio inicial + 5 novas tentativas
+- `FDD-PROP-12` (docs/FDD.md, Proposta a confirmar): camelCase e campo statuses
+- `FDD-PROP-13` (docs/FDD.md, Proposta a confirmar): customerId em body/query; rota de rotação; sem consulta por id
+- `FDD-PROP-14` (docs/FDD.md, Proposta a confirmar): Nomes de arquivos e tabelas usados no documento
+- `FDD-PROP-15` (docs/FDD.md, Proposta a confirmar): Pendentes de cadastro inativo ou removido vão para a DLQ
+- `FDD-PROP-16` (docs/FDD.md, Proposta a confirmar): Payload acima de 64KB direto para a DLQ
+- `FDD-PROP-17` (docs/FDD.md, Proposta a confirmar): fetch global e node:crypto, sem dependência nova
+- `FDD-PROP-18` (docs/FDD.md, Proposta a confirmar): Valores decididos como constantes do módulo
+- `FDD-PROP-19` (docs/FDD.md, Proposta a confirmar): Gerador seguro do Node; tamanho com Sofia
+- `FDD-PROP-20` (docs/FDD.md, Proposta a confirmar): Métricas por logs e correlação por event_id
+- `FDD-PROP-21` (docs/FDD.md, Proposta a confirmar): Assinar com a secret antiga durante as 24 horas
+- `FDD-PROP-22` (docs/FDD.md, Proposta a confirmar): Tabelas de evento sem FK para pedido e cliente
+- `FDD-PROP-23` (docs/FDD.md, Proposta a confirmar): Replay com mesmo id e payload, contagem zerada
+- `FDD-PROP-24` (docs/FDD.md, Proposta a confirmar): Não entregar evento posterior com anterior pendente
+- `FDD-PROP-25` (docs/FDD.md, Proposta a confirmar): A meta de 10 segundos é medida do commit da mudança de status até o início do envio inicial; as novas tentativas ficam fora da meta. A métrica de produto do PRD (PRD-OBJ-01) mede até a chegada ao cliente: as duas leituras devem ser reconciliadas na revisão
+- `FDD-PROP-26` (docs/FDD.md, Proposta a confirmar): O histórico devolve as últimas 100 entregas em lista simples, na chave `data`, sem paginação
+- `FDD-PROP-27` (docs/FDD.md, Proposta a confirmar): O filtro de inserção só considera cadastros ativos
+- `FDD-PROP-28` (docs/FDD.md, Proposta a confirmar): `statuses` aceita ao menos um valor, sem repetição
+- `FDD-PROP-29` (docs/FDD.md, Proposta a confirmar): O cadastro nasce com `active: true`
+- `FDD-PROP-30` (docs/FDD.md, Proposta a confirmar): A listagem inclui os cadastros inativos, com `active: false`
+- `FDD-PROP-31` (docs/FDD.md, Proposta a confirmar): A edição aceita `url`, `statuses` e `active`; não troca o cliente do cadastro
+- `FDD-PROP-32` (docs/FDD.md, Proposta a confirmar): Rotação e replay respondem `200`; a rotação devolve a nova secret e o instante em que a anterior deixa de valer; o replay devolve os identificadores do evento e do cadastro
+- `FDD-PROP-33` (docs/FDD.md, Proposta a confirmar): A entrega usa `POST` e não segue redirecionamento; resposta 3xx conta como falha
+- `FDD-PROP-34` (docs/FDD.md, Proposta a confirmar): `X-Timestamp` vai em ISO 8601, em UTC
+- `FDD-PROP-35` (docs/FDD.md, Proposta a confirmar): O item da fila de mortos permanece nela após o replay, com a data do último replay
+- `FDD-PROP-36` (docs/FDD.md, Proposta a confirmar): Em rotação repetida, a secret que ainda estava em carência é descartada; só a última anterior é mantida
+- `FDD-PROP-37` (docs/FDD.md, Proposta a confirmar): O histórico guarda o status HTTP e o corpo da resposta do cliente, com o corpo truncado num limite a definir
+- `FDD-PROP-38` (docs/FDD.md, Proposta a confirmar): `webhookId` nas tabelas de evento não tem chave estrangeira; o histórico é mantido quando o cadastro é removido
+- `FDD-PROP-39` (docs/FDD.md, Proposta a confirmar): Manter os padrões do Prisma na transação de `changeStatus` e medir a duração dela; definir `timeout` explícito só se a medição justificar
+- `FDD-PROP-40` (docs/FDD.md, Proposta a confirmar): O encerramento do worker aguarda o término do lote corrente antes de desconectar o Prisma
+- `FDD-PROP-41` (docs/FDD.md, Proposta a confirmar): O limite de 64KB aplica-se aos bytes do corpo JSON serializado em UTF-8
+- `FDD-PROP-42` (docs/FDD.md, Proposta a confirmar): Uma única migration cria as quatro tabelas novas
+- `FDD-PROP-43` (docs/FDD.md, Proposta a confirmar): O destino é validado no cadastro e a cada envio: o worker recusa os que resolvem para endereços privados, loopback ou link-local, conecta ao endereço validado (contra troca de DNS) e exige certificado TLS válido; entregas com destino recusado não têm resposta guardada
+- `FDD-PROP-44` (docs/FDD.md, Proposta a confirmar): Até existir vínculo entre usuário e cliente, restringir os contratos de gerenciamento (FDD-CONTRATO-01 a FDD-CONTRATO-06) a `requireRole('ADMIN')` e checar a quem pertence o cadastro nas rotas por id. Reabre a decisão de `[09:37] Sofia`; não é requisito
+- `FDD-PROP-45` (docs/FDD.md, Proposta a confirmar): Teto pequeno de cadastros por cliente, com número a fixar na revisão do FDD

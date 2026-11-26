@@ -206,7 +206,7 @@ O que foi verificado de forma mecânica no repositório final:
 
 - 1331 citações `[hh:mm] Falante` no corpo dos documentos: todas existem, com aquele falante naquele minuto.
 - 272 menções a caminhos de código existentes: todos os caminhos existem; os que ainda não existem estão marcados `(novo)`.
-- 554 IDs definidos nos documentos. 449 têm origem direta e estão na tabela principal do tracker (87,3% transcrição, 57 código); os outros 105 são propostas sem origem direta e estão no apêndice, identificadas como tais. Pela leitura estrita do critério do enunciado, a cobertura da tabela principal é de 81,0%.
+- 554 IDs definidos nos documentos. 449 têm origem direta e estão na tabela principal do tracker (87,3% transcrição, 57 código); os outros 105 são propostas sem origem direta, listadas no apêndice do tracker fora da tabela de rastreabilidade e identificadas como tais. Pela leitura estrita do critério do enunciado, a cobertura da tabela principal é de 81,0%.
 - Nenhum valor numérico fora do que foi decidido na reunião, exceto os que o próprio documento identifica como padrão do Prisma.
 - Os controles negativos do validador (timestamp inventado, falante trocado, caminho inexistente, emoji, item descartado disfarçado de requisito) são todos reprovados por ele.
 
