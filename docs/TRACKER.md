@@ -257,7 +257,7 @@ Este tracker é a referência cruzada do pacote: para cada item registrado nos d
 | FDD-CA-16 | docs/FDD.md | Critério de aceite técnico | Corpo enviado igual ao snapshot mesmo após remoção do pedido | TRANSCRICAO | [09:52] Larissa |
 | FDD-COMP-01 | docs/FDD.md | Componente | Módulo de webhooks da API em `src/modules/webhooks` | TRANSCRICAO | [09:27] Bruno |
 | FDD-COMP-02 | docs/FDD.md | Componente | Ponto de publicação dentro de `OrderService.changeStatus` | TRANSCRICAO | [09:40] Bruno |
-| FDD-COMP-03 | docs/FDD.md | Componente | Entry-point `src/worker.ts` e script `npm run worker` | TRANSCRICAO | [09:11] Larissa |
+| FDD-COMP-03 | docs/FDD.md | Componente | Entry-point `src/worker.ts` (novo) e script `npm run worker` | TRANSCRICAO | [09:11] Larissa |
 | FDD-COMP-04 | docs/FDD.md | Componente | Processador de entregas dentro do módulo | TRANSCRICAO | [09:28] Bruno |
 | FDD-COMP-05 | docs/FDD.md | Componente | Tabela `webhook_outbox` com status e índices | TRANSCRICAO | [09:06] Diego |
 | FDD-COMP-06 | docs/FDD.md | Componente | Tabela de cadastros com url, secret, customer_id e estado ativo | TRANSCRICAO | [09:21] Bruno |
@@ -436,7 +436,7 @@ Este tracker é a referência cruzada do pacote: para cada item registrado nos d
 | FDD-INT-06 | docs/FDD.md | Integração com o código existente | `authenticate` nas rotas do módulo e `requireRole('ADMIN')` no replay, sem mudar o middleware | TRANSCRICAO | [09:36] Larissa |
 | FDD-INT-07 | docs/FDD.md | Integração com o código existente | `buildControllers` instancia repository, service e controller do módulo; `buildApp` não muda | CODIGO | src/app.ts |
 | FDD-INT-08 | docs/FDD.md | Integração com o código existente | `Controllers` ganha `webhooks`; `buildApiRouter` monta `/webhooks` e `/admin/webhooks` | CODIGO | src/routes/index.ts |
-| FDD-INT-09 | docs/FDD.md | Integração com o código existente | `src/server.ts` sem mudança, usado como modelo de bootstrap e shutdown de `src/worker.ts` | TRANSCRICAO | [09:11] Larissa |
+| FDD-INT-09 | docs/FDD.md | Integração com o código existente | `src/server.ts` sem mudança, usado como modelo de bootstrap e shutdown de `src/worker.ts` (novo) | TRANSCRICAO | [09:11] Larissa |
 | FDD-INT-10 | docs/FDD.md | Integração com o código existente | Worker obtém instância própria de `PrismaClient` via `createPrismaClient`, no mesmo banco | TRANSCRICAO | [09:30] Bruno |
 | FDD-INT-11 | docs/FDD.md | Integração com o código existente | `env.ts` sem mudança; valores do worker como constantes; worker herda a validação de todas as variáveis | CODIGO | src/config/env.ts |
 | FDD-INT-12 | docs/FDD.md | Integração com o código existente | Logger Pino reusado sem mudança; extensão da redação apenas como proposta | TRANSCRICAO | [09:29] Bruno |

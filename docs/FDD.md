@@ -5,7 +5,7 @@
 | Autor | Larissa (Tech Lead) |
 | Data | 2026-11-25 |
 | Status | Em revisão — sessão de revisão com Bruno e Diego agendada na reunião (`[09:50] Larissa`) |
-| Decisões de origem | [RFC](RFC.md) (proposta) · [ADRs](adrs/README.md) (decisões fechadas) · [PRD](PRD.md) (requisitos) |
+| Decisões de origem | [RFC](RFC.md) (proposta) · [ADRs](RFC.md#8-decisões-relacionadas) (decisões fechadas) · [PRD](PRD.md) (requisitos) |
 | Rastreabilidade | [Tracker](TRACKER.md) — cada ID deste documento tem uma linha com a origem |
 
 ## Como ler este documento

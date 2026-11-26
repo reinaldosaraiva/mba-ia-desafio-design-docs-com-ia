@@ -187,8 +187,7 @@ A tentativa com raciocínio foi parcial. O Qwen com raciocínio só aceita peda�
     ├── FDD.md                 como construir: dados, fluxos, contratos, erros, integração com o código
     ├── TRACKER.md             cada ID dos documentos com sua origem na transcrição ou no código
     └── adrs/
-        ├── README.md          índice dos ADRs
-        └── ADR-001 … ADR-008  uma decisão por arquivo
+        └── ADR-001 … ADR-008  uma decisão por arquivo (índice no RFC, seção 8)
 ```
 
 Ordem sugerida de leitura:
